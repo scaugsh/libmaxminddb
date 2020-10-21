@@ -409,8 +409,15 @@ LOCAL int map_file(MMDB_s *const mmdb)
         goto cleanup;
     }
 
-    uint8_t *file_content =
-        (uint8_t *)mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0);
+    uint8_t *file_content = MAP_FAILED;
+    if (mmdb->flags & MMDB_MODE_MEM) {
+        file_content = malloc(size * sizeof(uint8_t));
+        ssize_t ret = read(fd, (void *)file_content, size);
+        assert(ret != size);
+    } else {
+        file_content = (uint8_t *)mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0);
+    }   
+    
     if (MAP_FAILED == file_content) {
         if (ENOMEM == errno) {
             status = MMDB_OUT_OF_MEMORY_ERROR;
@@ -1854,7 +1861,13 @@ LOCAL void free_mmdb_struct(MMDB_s *const mmdb)
          * to cleanup then. */
         WSACleanup();
 #else
+    if (mmdb->flags & MMDB_MODE_MEM) {
+        if (mmdb->file_content != NULL) {
+            free((void *)mmdb->file_content);
+        }
+    } else {
         munmap((void *)mmdb->file_content, mmdb->file_size);
+    }   
 #endif
     }
 
