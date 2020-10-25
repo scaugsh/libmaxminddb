@@ -70,7 +70,8 @@ typedef ADDRESS_FAMILY sa_family_t;
 /* flags for open */
 #define MMDB_MODE_MMAP (1)
 #ifndef _WIN32
-#define MMDB_MODE_MEM  (2)
+#define MMDB_MODE_MMAPLOCK (2)
+#define MMDB_MODE_MEM (4)
 #endif
 #define MMDB_MODE_MASK (7)
 

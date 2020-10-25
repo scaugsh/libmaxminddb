@@ -20,6 +20,9 @@ else()
   set(MMDB_UINT128_IS_BYTE_ARRAY 1)
 endif()
 
+add_definitions(-std=c99)
+add_definitions(-D_BSD_SOURCE)
+
 include (TestBigEndian)
 TEST_BIG_ENDIAN(IS_BIG_ENDIAN)
 if(NOT IS_BIG_ENDIAN)

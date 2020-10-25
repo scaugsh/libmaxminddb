@@ -415,7 +415,11 @@ LOCAL int map_file(MMDB_s *const mmdb)
         ssize_t ret = read(fd, (void *)file_content, size);
         assert(ret != size);
     } else {
-        file_content = (uint8_t *)mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0);
+        if (mmdb->flags & MMDB_MODE_MMAPLOCK) {
+            file_content = (uint8_t *)mmap(NULL, size, PROT_READ, MAP_SHARED | MAP_LOCKED, fd, 0);
+        } else {
+            file_content = (uint8_t *)mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0);
+        }
     }   
     
     if (MAP_FAILED == file_content) {
