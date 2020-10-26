@@ -20,7 +20,7 @@ else()
   set(MMDB_UINT128_IS_BYTE_ARRAY 1)
 endif()
 
-add_definitions(-std=c11)
+add_definitions(-std=c99)
 add_definitions(-D_BSD_SOURCE)
 
 include (TestBigEndian)
