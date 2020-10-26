@@ -413,7 +413,7 @@ LOCAL int map_file(MMDB_s *const mmdb)
     if (mmdb->flags & MMDB_MODE_MEM) {
         file_content = malloc(size * sizeof(uint8_t));
         ssize_t ret = read(fd, (void *)file_content, size);
-        assert(ret != size);
+        assert(ret == size);
     } else {
         if (mmdb->flags & MMDB_MODE_MMAPLOCK) {
             file_content = (uint8_t *)mmap(NULL, size, PROT_READ, MAP_SHARED | MAP_LOCKED, fd, 0);
